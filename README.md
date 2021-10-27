@@ -51,7 +51,7 @@
 | \n   | 标识一个八进制转义值或一个后向引用。如果\n之前至少n个获取的子表达式，则n为后向引用。否则，如果n为八进制数字(0-7)，则n为一个八进制转义值。 |
 | \nm  | 标识一个八进制转义值或一个后向引用。如果\nm之前至少有isprecededbyatleastnm个获取得子表达式，则nm为后向引用。如果\nm之前至少有n个获取，则n为一个后跟文字m的后向引用。如果前面的条件都不满足，若n和m均为八进制数字(0-7)，则\nm将匹配八进制转义值nm。 |
 
-更多代码格式和细节参考[flex学习](Ex1/flex学习.md)
+更多代码格式和细节参考[flex学习](https://github.com/ferapontqiezi/CompilerDesign/blob/main/Ex1/Flex%E5%AD%A6%E4%B9%A0.md)
 
 ### bison
 
@@ -119,11 +119,11 @@ void yyerror (char const *s){
 }
 ```
 
-更多代码格式和细节参考[bison学习](Ex1/bison学习.md)
+更多代码格式和细节参考[bison学习](https://github.com/ferapontqiezi/CompilerDesign/blob/main/Ex1/Bison%E5%AD%A6%E4%B9%A0.md)
 
 ## 参考文献
 
 1. [正则表达式菜鸟教程](https://www.runoob.com/regexp/regexp-metachar.html)
 2. [bison官方文档](https://www.gnu.org/software/bison/manual/bison.html#Infix-Calc)
-3. flex 2.5官方文档
-4. flex和bison中文版.东南大学出版社
+3. [flex 2.5官方文档](https://github.com/ferapontqiezi/CompilerDesign/blob/main/flex25.pdf)
+4. [flex和bison中文版.东南大学出版社](https://github.com/ferapontqiezi/CompilerDesign/blob/main/flex%E4%B8%8Ebison%20%E4%B8%AD%E6%96%87%E7%89%88%20%E7%AC%AC%E4%BA%8C%E7%89%88%20%E9%AB%98%E6%B8%85.pdf)
