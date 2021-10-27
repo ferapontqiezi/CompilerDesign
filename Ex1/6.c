@@ -1,62 +1,87 @@
 %{
-#define YYSTYPE double
-#include <math.h>
 #include <stdio.h>
-int yylex (void);
-void yyerror (char const *);
+#include <stdlib.h>
+#include <ctype.h>
+int yylex(void);
+void yyerror(char const *);
 %}
-/* Bison declarations.  */
+
+
+%define api.value.type {double}
+/* Tokens */
 %token NUM
-%left '-' '+'
-%left '*' '/'
-%right '^'        /* exponentiation */
-%% /* The grammar follows.  */
-input:
-  
-| input line
-;
-line:
-  '\n'
-| exp '\n'  { printf ("=%.10g\n", $1); }
-;
-exp:
-  NUM                { $$ = $1;           }
-| exp '+' exp        { $$ = $1 + $3;      }
-| exp '-' exp        { $$ = $1 - $3;      }
-| exp '*' exp        { $$ = $1 * $3;      }
-| exp '/' exp        { $$ = $1 / $3;      }
-| '-' exp               { $$ = -$2;          }
-| exp '^' exp        { $$ = pow ($1, $3); }
-| '(' exp ')'        { $$ = $2;           }
-;
+%token EOL
+%token ADD SUB MUL DIV
+%token LP RP
+ /* begin */
+%left ADD SUB
+%left MUL DIV
+
+ /* end */
+%% 
+  /* Grammar rules and actions follow.  */
+ /* begin */
+calclist:
+	%empty
+	|calclist exp EOL {printf("=%.10g\n",$2);}
+exp:term
+	|exp ADD exp {$$=$1+$3;}
+	|exp SUB exp {$$=$1-$3;}
+	|exp MUL exp {$$=$1*$3;}
+	|exp DIV exp {$$=$1/$3;}
+	|LP exp RP {$$=$2;}
+	;
+
+term:NUM
+	;
+
+
+
+ /* end */
 %%
 
-#include <ctype.h>
- 
-int yylex (void) {
-       int c;
- 
-/* Skip white space.  */
-       while ((c = getchar ()) == ' ' || c == '\t') ;
- 
-/* Process numbers.  */
-       if (c == '.' || isdigit (c)) {
-       ungetc (c, stdin);
-       scanf ("%lf", &yylval);
-       return NUM;
-     }
- 
-       /* Return end-of-input.  */
-       if (c == EOF) return 0;
- 
-       /* Return a single char.  */
-       return c;
+/* The lexical analyzer returns a double floating point
+   number on the stack and the token NUM, or the numeric code
+   of the character read if not a number.  It skips all blanks
+   and tabs, and returns 0 for end-of-input.  */
+
+/* begin */
+int yylex(void)
+{
+	int c;
+	while((c=getchar())==' '||c=='\t')
+	continue;
+	if(c=='.'||isdigit(c))
+	{
+	ungetc(c,stdin);
+	if(scanf("%lf",&yylval)!=1)
+		abort();
+	return NUM;
+	}
+	switch(c){
+	case EOF: return YYEOF;
+	case '\n':return EOL;
+	case '+': return ADD;
+    case '-': return SUB;
+	case '*': return MUL;
+	case '/': return DIV;
+	default:
+		return c;
+		
+	}
+	
 }
- 
-void yyerror (char const *s) {
-    fprintf (stderr, "=%s\n", s); 
+/* end */
+
+int main (int argc, char** argv)
+{
+   yyparse();
+   return 0;
 }
- 
-int main (void) {
-    return yyparse ();
+
+
+/* Called by yyparse on error.  */
+void yyerror (char const *s)
+{
+  fprintf (stderr, "%s\n", s);
 }
