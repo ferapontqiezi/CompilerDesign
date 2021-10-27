@@ -35,24 +35,31 @@ void yyerror(const char *s);
 %token EXPO
 %token LP
 %token RP
+%precedence NEG    /* unary minus */
+
+%left ADD SUB
+%left MUL DIV
+%right EXPO       /* exponentiation */
+
 
 %%
 calclist:
 	%empty
 	|calclist exp EOL {printf("=%.10g\n",$2);}
 	
-exp:NUM {$$=$1;}
+exp:term
    	|exp ADD exp {$$=$1+$3;}
 	|exp SUB exp {$$=$1-$3;}
 	|exp MUL exp {$$=$1*$3;}
 	|exp DIV exp {$$=$1/$3;}
 	|exp EXPO exp {$$=pow($1,$3);}
-
 	|LP exp RP {$$=$2;}
+	
 	|error {}
 	;
 
 term:NUM
+	|SUB term %prec NEG {$$=-$2;}
 	;
 %%
 
